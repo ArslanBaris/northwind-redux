@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as cartActions from "../../redux/actions/cartActions";
+import { Link } from "react-router-dom";
+import alertify from "alertifyjs"
 
 import {
   UncontrolledDropdown,
@@ -14,6 +16,11 @@ import {
 } from "reactstrap";
 
 class CartSummary extends Component {
+    removeFromCart(product){
+        this.props.actions.removeFromCart(product)
+        alertify.error(product.productName+" removed from cart.")
+    }
+
   renderEmpty() {
     return (
       <NavItem>
@@ -31,7 +38,7 @@ class CartSummary extends Component {
         <DropdownMenu right>
           {this.props.cart.map((cartItem) => (
             <DropdownItem key={cartItem.product.id}>
-              <Badge color="danger" onClick={()=>{this.props.actions.removeFromCart(cartItem.product)}}>X</Badge>
+              <Badge color="danger" onClick={()=>{this.removeFromCart(cartItem.product)}}>X</Badge>
               {cartItem.product.productName}
               <Badge className="ml" color="success">
                 {cartItem.quantity}
@@ -40,7 +47,7 @@ class CartSummary extends Component {
           ))}
 
           <DropdownItem divider />
-          <DropdownItem>Go to cart</DropdownItem>
+          <DropdownItem><Link to={"/cart"}>Go to cart</Link></DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
     );
